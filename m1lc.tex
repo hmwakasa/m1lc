@@ -36,8 +36,9 @@
 \usepackage[nowidering]{yhmath}
 \usepackage{newpxmath,amsmath,mathtools,amssymb,mathrsfs,rsfso,mleftright}
 \usepackage[T1]{fontenc}
-\mleftright
 \usepackage[notrig,italicdiff]{physics}
+\usepackage{hmmath}
+\mleftright
 
 \SetSymbolFont{operators}{normal}{T1}{uop}{m}{n}
 \DeclareMathAlphabet{\mathnormal}{T1}{pplx}{m}{it}
@@ -112,19 +113,23 @@
 ]{HackGen}
 
 \allowdisplaybreaks[4]
-\ltjenableadjust[lineend=extended,priority=true,profile=true,linestep=true]
+\ltjenableadjust[lineend=extended,priority=true,profile=true,linestep=false]
 
 %%%%%%%%%%%%自作マクロ
 \newcommand{\hmvec}{\mathbold}
 \newcommand{\hmeqdef}{\stackrel{\mathrm{def}}{=}}
 \newcommand{\hmeqq}{\stackrel{\mathrm{?}}{=}}
 \newcommand{\centeralign}[1]{\rule{0pt}{0pt}\hfill#1\hfill\rule{0pt}{0pt}}
-\NewDocumentCommand\hmu{s m}{\IfBooleanF{#1}{\,}\mathrm{#2}}
+\NewDocumentCommand\hmu{s m}{\IfBooleanF{#1}{\,}\ifmmode\mathrm{#2}\else\(\mathrm{#2}\)\fi}
 \newcommand{\hmemph}[1]{\textbf{#1}}
 \newcommand{\hmTOA}{\mathrm{TOA}}
+\newcommand{\hmtp}{\mathrm{tp}}
 \newcommand{\hmRAD}{\mathrm{RAD}}
 \newcommand{\hmCON}{\mathrm{CON}}
+\newcommand{\hme}[1]{\times10^{#1}}
+\newcommand{\hmfnc}[1]{\(\mathrm{#1}\)}
 
+\renewcommand{\qty}{\hmqty}
 
 \author{北海道大学大学院理学院 地球流体力学研究室 M1 人見祥磨}
 \title{多様な惑星の放射計算に向けて\\---Nakajima et al.\ (1992) の再現実験}
@@ -138,18 +143,199 @@
 \begin{frame}
 	\section{動機}
 	\begin{itemize}
-		\item 系外惑星大気の子午面温度分布を計算したい
+		\item 惑星の生命居住可能性を調べたい
+		\item 生命が存在するためには、惑星表面に液体の水があることが重要だと考えられる
+		\item 惑星の温度を計算することで、惑星表面に液体の水が存在しうるかを検討することができる
+		\item 数値計算で温度決定をする第一歩として、放射対流平衡の計算をしている
 			\begin{itemize}
-				\item そのために放射計算をする必要がある
-				\item GFD 研究室では、放射計算に DCPAM を主に利用している
-				\item DCPAM は3 次元球面上のプリミティブ方程式に従う大気の大循環を計算する
-					ための数値モデル
-				\item しかし、DCPAM は、中心星からの放射スペクトルを変更して計算を行うことが
-					できないらしい
+				\item Nakajima et al.\ (1992) の再現計算を行っている
 			\end{itemize}
-		\item 中心星からのスペクトルを変更して計算できるよう、新たに放射スキームを
-			改良したい
 	\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\section{Nakajima et al.\ (1992)}
+	\begin{itemize}
+		\item 表面温度と大気上端での上向き放射フラックス (Outgoing longwave radiation; OLR)
+			の関係を調べたもの
+		\item OLR には上限が存在することがわかった
+			\begin{itemize}
+				\item Komabayashi (1967, 1968) や Ingersoll (1969) によって得られた OLR の
+					上限とは異なる上限である
+			\end{itemize}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Komabayashi--Ingersoll Limit}
+	\begin{columns}[T]
+		\begin{column}{.5\textwidth}
+			\begin{itemize}
+				\item Komabayashi や Ingersoll  が外向き赤外放射の上限を得た
+			\end{itemize}
+			\begin{block}{放射フラックス密度}\tiny
+				\begin{gather}
+					F^\uparrow[\tau]=
+					\pi B[\tau]-\int^\tau_{\tau_b}\qty[\dv{}{\tau'}[\pi B[\tau']]
+					\exp\left[-\frac{3}{2}(\tau'-\tau)\right]]d\tau'
+					\\
+					\begin{split}
+						F^\downarrow[\tau]=
+						\pi B[\tau]-\int^\tau_0\qty[\dv{}{\tau'}[\pi B[\tau']]
+						\exp\left[-\frac{3}{2}(\tau-\tau')\right]]d\tau'\\
+						-\pi B[0]\exp\left[-\frac{3}{2}\tau\right]
+					\end{split}
+				\end{gather}
+				この 2 式より
+				\begin{equation}
+					\pi B[\tau]=\frac{1}{2}F^\uparrow_\hmTOA\qty(\frac{3}{2}\tau+1)
+					\label{rad}
+				\end{equation}
+			\end{block}
+		\end{column}
+		\begin{column}{.5\textwidth}
+			\begin{block}{光学的厚さの式}\tiny
+				\begin{equation}
+					d\tau=(\kappa_vx_vm_v+\kappa_nx_nm_n)\frac{dp}{\bar mg}
+				\end{equation}
+				これを積分して
+				\begin{equation}
+					\tau=(\kappa_vm_vp^*[T_\hmtp]+\kappa_nm+n(p_\hmtp-p^*[T_\hmtp]))
+					\frac{p}{p_\hmtp}\frac{1}{\bar mg}\label{tau}
+				\end{equation}
+				ただし、\(p*\) は飽和水蒸気圧で、添字 \(\hmtp\) は対流圏界面での値
+			\end{block}
+			\begin{block}{\eqref{rad} 式 \eqref{tau} 式 の対流圏界面での値}\tiny
+				\begin{gather}
+					(1/2)F^\uparrow_\hmTOA((3/2)\tau_\hmtp+1)=\sigma T^4_\hmtp\\
+					\tau_\hmtp=\kappa_vp^*[T_\hmtp]m_v/(\bar mg)
+				\end{gather}
+				この 2 式が解をもつ条件が Komabayashi--Ingersoll limit
+			\end{block}
+		\end{column}
+	\end{columns}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Nakajima et al.\ のモデル設定}
+	\begin{itemize}
+		\item 一次元放射対流平衡モデル
+		\item 成層圏は放射平衡
+		\item 対流圏の放射過程・熱力学過程を考慮
+		\item 気体は凝結成分と非凝結成分の 2 成分
+	\end{itemize}
+	\begin{columns}[T]
+		\begin{column}{.35\textwidth}
+			\small
+				\centering
+				\begin{tabular}{rl}
+					\hline
+					成層圏&放射平衡\\
+					対流圏界面&飽和水蒸気\\
+					対流圏&飽和断熱減率\\
+					放射過程&散乱なし、灰色\\
+					成分&理想気体、2 成分\\
+					臨界点&なし\\
+					\hline
+				\end{tabular}
+		\end{column}
+		\begin{column}{.6\textwidth}
+			\tiny
+			\centering
+				\begin{tabular}{rl}
+					\hline
+					気体定数&\(R=8.314\hmu{J/mol\,K}\)\\
+					重力加速度&\(g=9.8\hmu{m/s^2}\)\\
+					ステファンボルツマン定数&\(\sigma=5.67\hme{-8}\hmu{W/m^2\,K^4}\)\\
+					\hline
+					非凝縮成分の分子量&\(m_n=18\hme{-3}\hmu{kg/mol}\)\\
+					凝縮成分の分子量&\(m_v=18\hme{-3}\hmu{kg/mol}\)\\
+					凝縮成分の定圧モル比熱&\(c_{pv}=4R\)\\
+					凝縮成分の潜熱&\(l=43655\hmu{J/mol}\)\\
+					飽和水蒸気曲線の定数&\(p^*_0=1.4\hme{11}\hmu{Pa}\)\\
+					非凝縮成分の定圧モル比熱&\(c_{pn}\)……複数ケース\\
+					大気の底での非凝縮成分の量&\(p_{n0}\)……複数ケース\\
+					凝縮成分の吸収係数&\(\kappa_{v}\)……複数ケース\\
+					非凝縮成分の吸収係数&\(\kappa_{n}\)……複数ケース\\
+					\hline
+				\end{tabular}
+		\end{column}
+	\end{columns}
+\end{frame}
+
+\begin{frame}
+	\section{Nakajima et al.\ (1992) 再現実験}
+	\begin{itemize}
+		\item 神戸大学の大西さんが 2012 年に作成したプログラムを用いて、再現実験を行っている
+		\item 地表面温度がある値のときに、OLR がどのような値をとるか計算するプログラム
+	\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\frametitle{大西プログラムの計算の流れ}
+	\begin{enumerate}
+		\item 初期値設定
+		\item 湿潤断熱減率に従って、上空まで温度、フラックスを計算 (\hmfnc{calc\_MoistAd})
+		\item 対流圏界面の計算 (\hmfnc{calc\_Tropopause})
+		\item 対流圏界面を挿入
+		\item 圏界面水蒸気混合比で飽和
+		\item 光学的厚さの計算
+		\item 放射平衡計算（以下をループ）
+			\begin{enumerate}
+				\item 加熱 (\hmfnc{calc\_RaiseTemp})
+					\item 圏界面の計算 (\hmfnc{calc\_Tropopause})
+					\item 圏界面移動
+					\item 収束判定
+					\item 圏界面の計算 (\hmfnc{calc\_Tropopause})
+					\item 圏界面移動
+			\end{enumerate}
+	\end{enumerate}
+\end{frame}
+
+\begin{frame}
+	\frametitle{基礎方程式}
+	\small
+	\begin{block}{湿潤偽断熱減率}
+		\begin{equation}
+			\qty(\pdv{T}{p})_\text{湿潤偽断熱}=
+			\left.\qty(\frac{RT}{pc_{pn}}+\frac{x_v}{x_n}\frac{l}{pc_{pn}})\middle/
+			\qty(x_n+x_v\frac{c_{pv}}{c_{pn}}+\frac{x_v}{x_n}\frac{l^2}{RT^2c_{pn}})\right.
+		\end{equation}
+	\end{block}
+	\begin{block}{光学的厚さ}
+		\begin{equation}
+			\dv{\tau}{p}=\frac{\kappa_vx_vm_v+\kappa_nx_nm_n}{\bar mg}
+		\end{equation}
+	\end{block}
+	\begin{block}{放射フラックスの計算}
+		\begin{equation}
+			A=\frac{3}{2}\pi B[\tau']\exp\qty[-\frac{3}{2}(\tau'-\tau)]
+		\end{equation}
+	\end{block}
+\end{frame}
+
+\begin{frame}
+	\frametitle{計算結果}
+	\begin{center}
+		\scriptsize
+		\begin{tikzpicture}
+			\begin{axis}[
+				xmin=250,xmax=345,ymin=200,ymax=400,
+				ylabel={OLR (\(F^\uparrow_\hmTOA\)) [\hmu*{W/m^{-2}}]},
+				xlabel={地表面温度 (\(T_s\)) [\hmu*{K}]},
+				title={再現実験で得られた結果},
+				x=.005\linewidth,y=.002\linewidth,
+			]
+			\addplot[mark=*,mark size=.25ex]coordinates{
+					(250,220.322) (255,237.744) (260,255.731) (265,274.018)
+					(270,292.099) (275,309.447) (280,325.191) (285,338.276)
+					(290,347.868) (295,353.425) (300,355.084) (305,353.621)
+					(310,350.094) (315,345.337) (320,339.706) (325,333.928)
+					(330,326.817) (335,320.34) (340,314.588) (345,310.175)
+				};
+		\end{axis}
+		\end{tikzpicture}
+	\end{center}
 \end{frame}
 
 \begin{frame}
@@ -178,31 +364,6 @@
 		\node at(current page.south east)[align=center,above left=2em]
 			{\includegraphics[width=8\zh]{dcpam.png}\\{\scriptsize 「DCPAM の概要」より}};
 	\end{tikzpicture}
-\end{frame}
-
-\begin{frame}
-	\frametitle{これまでのの経緯}
-	\begin{itemize}
-		\item 卒論では、大気の温度分布を求めるため、放射の知識を整理した
-			\begin{itemize}
-				\item 放射に関して、観測なども含めて、基礎事項を解説している
-					Liou の教科書を読んだ
-					\begin{itemize}
-						\item 大気放射学 {\scriptsize---衛星リモートセンシングと気候問題へのアプローチ---}\\
-							K.~N.~Liou（著） 藤枝 鋼、深堀 正志（翻訳）\\
-							共立出版 \textbf{(2014)} 672ページ
-					\end{itemize}
-				\item 放射に関する基本的な知識を整理した
-				\item 放射計算を行うための相関 \(k\) 分布法という手法について学んだ
-			\end{itemize}
-		\item 現在、実際の放射計算のプログラムについて理解するため、
-			Nakajima et al.\ (1992) の再現実験を行っている
-	\end{itemize}
-\end{frame}
-
-\begin{frame}
-	\section{Nakajima et al\ (1992)}
-	
 \end{frame}
 
 \end{document}
