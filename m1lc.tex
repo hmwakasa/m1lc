@@ -25,9 +25,11 @@
 
 \usepackage{array}
 
-\usepackage[loadonly]{enumitem}
+\usepackage[loadonly,]{enumitem}
 \newlist{desc}{description}{5}
 \setlist[desc]{labelindent=2\zw,labelsep*=1\zw,labelwidth=4\zw}
+\newlist{enu}{enumerate}{5}
+\setlist[enu]{label*=\arabic*.}
 
 \ltjsetparameter{jacharrange={-2,-3,-8}}
 \usepackage[no-math,match,deluxe,fontspec]{luatexja-preset}
@@ -128,6 +130,7 @@
 \newcommand{\hmCON}{\mathrm{CON}}
 \newcommand{\hme}[1]{\times10^{#1}}
 \newcommand{\hmfnc}[1]{\(\mathrm{#1}\)}
+\newcommand{\hmfconv}{F_\mathrm{conv}}
 
 \renewcommand{\qty}{\hmqty}
 
@@ -141,29 +144,67 @@
 \end{frame}
 
 \begin{frame}
-	\section{動機}
-	\begin{itemize}
-		\item 惑星の生命居住可能性を調べたい
-		\item 生命が存在するためには、惑星表面に液体の水があることが重要だと考えられる
-		\item 惑星の温度を計算することで、惑星表面に液体の水が存在しうるかを検討することができる
-		\item 数値計算で温度決定をする第一歩として、放射対流平衡の計算をしている
+	\frametitle{動機}
+	\begin{columns}[T,onlytextwidth]
+		\begin{column}{.5\textwidth}
 			\begin{itemize}
-				\item Nakajima et al.\ (1992) の再現計算を行っている
+				\item 惑星の生命居住可能性を調べたい
+				\item 生命が存在するためには、惑星表面に液体の水があることが重要だと考えられる
+					\begin{itemize}
+						\item 惑星表面に液体の水が存在しうる領域は、ハビタブルゾーン (HZ)
+							と呼ばれる
+					\end{itemize}
 			\end{itemize}
+		\end{column}
+		\begin{column}{.45\textwidth}
+			\centering
+			\includegraphics[width=\textwidth]{hz.jpg}\\
+			\scriptsize HZ の概要図。Image credit: NASA
+		\end{column}
+	\end{columns}
+	\begin{itemize}
+		\item 惑星表面に液体の水が存在しうるかを、惑星の温度を計算することで検討することができる
+		\item 惑星の温度決定の第一歩として、一次元放射対流平衡計算を行うことにした
 	\end{itemize}
 \end{frame}
 
 \begin{frame}
-	\section{Nakajima et al.\ (1992)}
+	\frametitle{動機}
 	\begin{itemize}
-		\item 表面温度と大気上端での上向き放射フラックス (Outgoing longwave radiation; OLR)
-			の関係を調べたもの
-		\item OLR には上限が存在することがわかった
+		\item 一方、惑星の居住可能性に関して、暴走温室状態が議論されてきた
 			\begin{itemize}
-				\item Komabayashi (1967, 1968) や Ingersoll (1969) によって得られた OLR の
-					上限とは異なる上限である
+				\item 惑星が射出できる放射フラックスには上限（射出限界）があると示された
+				\item 射出限界を超えた太陽放射が入射すると、暴走温室状態になる
 			\end{itemize}
+		\item 現在、射出限界について整理した Nakajima et al.\ (1992) の再現計算を行っている
+		\item 射出限界に関して述べた、Komabayashi (1967, 1968), Ingersoll (1969) の
+			レビューを行い、現在行っている再現実験の結果を報告する
 	\end{itemize}
+	\begin{block}{暴走温室状態とは}
+		\small
+		温度が上昇すると水蒸気量が増え、温室効果をもつ水蒸気が増大することで
+		さらに地表面温度が上昇する、正のフィードバックによって、温度が上昇し続ける状態
+	\end{block}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Komabayashi (1967, 1968)、Ingersoll (1969) のモデル}
+	
+			\small
+				\centering
+				\begin{tabular}{rll}
+					\hline
+					&Komabayashi&Ingersoll\\
+					\hline
+					成層圏&放射平衡&放射平衡\\
+					成層圏&飽和水蒸気&一定のモル分率\\
+					対流圏界面&考慮されていない&飽和水蒸気\\
+					対流圏&考慮されていない&考慮されていない\\
+					放射過程&散乱なし、灰色&散乱なし、灰色\\
+					成分&理想気体、1 成分&理想気体、2 成分\\
+					臨界点&なし\\
+					\hline
+				\end{tabular}
 \end{frame}
 
 \begin{frame}
@@ -217,6 +258,34 @@
 \end{frame}
 
 \begin{frame}
+	\frametitle{Nakajima et al.\ (1992)}
+	\begin{itemize}
+		\item 表面温度 \(T_s\) と大気上端での上向き放射フラックス
+			(Outgoing longwave radiation; OLR, \(F^\uparrow_\hmTOA\))
+			の関係を調べたもの
+		\item OLR には上限が存在することがわかった
+	\end{itemize}
+	\begin{columns}[onlytextwidth,T]
+		\begin{column}{.6\textwidth}
+			\begin{itemize}
+				\item 大気の水蒸気量（凝結成分量）に応じて、異なる上限が現れる
+					\begin{itemize}
+						\item 水蒸気量が極端に少ないときに現れる、Komabayashi--Ingersoll limit
+							(Komabayashi 1967, 1968, Ingersoll 1969)
+						\item ある程度水蒸気が存在するときに現れる上限
+					\end{itemize}
+			\end{itemize}
+		\end{column}
+		\begin{column}{.35\textwidth}
+			\centering\scriptsize
+			\includegraphics[width=\textwidth]{nakajima6.png}\\
+			大気下端の水蒸気量 \(p_0\) を変化させたときの \(F^\uparrow_\hmTOA\) と
+			\(T_s\) の関係 (Nakajima et al\ Fig.~6)
+		\end{column}
+	\end{columns}
+\end{frame}
+
+\begin{frame}
 	\frametitle{Nakajima et al.\ のモデル設定}
 	\begin{itemize}
 		\item 一次元放射対流平衡モデル
@@ -264,7 +333,14 @@
 \end{frame}
 
 \begin{frame}
-	\section{Nakajima et al.\ (1992) 再現実験}
+	\frametitle{Nakajima et al.\ の結果}
+	\begin{itemize}
+		\item （Fig.~3 の説明）
+	\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Nakajima et al.\ (1992) 再現実験}
 	\begin{itemize}
 		\item 神戸大学の大西さんが 2012 年に作成したプログラムを用いて、再現実験を行っている
 		\item 地表面温度がある値のときに、OLR がどのような値をとるか計算するプログラム
@@ -272,74 +348,139 @@
 \end{frame}
 
 \begin{frame}
-	\frametitle{大西プログラムの計算の流れ}
-	\begin{enumerate}
-		\item 初期値設定
-		\item 湿潤断熱減率に従って、上空まで温度、フラックスを計算 (\hmfnc{calc\_MoistAd})
-		\item 対流圏界面の計算 (\hmfnc{calc\_Tropopause})
-		\item 対流圏界面を挿入
-		\item 圏界面水蒸気混合比で飽和
-		\item 光学的厚さの計算
-		\item 放射平衡計算（以下をループ）
-			\begin{enumerate}
-				\item 加熱 (\hmfnc{calc\_RaiseTemp})
-					\item 圏界面の計算 (\hmfnc{calc\_Tropopause})
-					\item 圏界面移動
-					\item 収束判定
-					\item 圏界面の計算 (\hmfnc{calc\_Tropopause})
-					\item 圏界面移動
-			\end{enumerate}
-	\end{enumerate}
+	\frametitle{大西プログラムの概要}
+	\begin{block}{モデルの変数}
+		\begin{itemize}
+			\item Nakajima et al.\ Fig.~3 と同様の条件
+			\item \(c_{pn}=3.5R, c_{pv}=4R, \kappa_v=0.01, \kappa_n=0, p_{n0}=1\hme{5}\hmu{Pa}\)
+		\end{itemize}
+	\end{block}
+	\begin{block}{グリッドの与え方}
+	\begin{itemize}
+		\item 鉛直 1 次にグリッドを設ける
+		\item グリッド上に \(p,T,\tau,F^\uparrow,F^\downarrow\) を与える
+		\item グリッド間に \(\hmfconv\) を与える
+			\begin{itemize}
+				\item \(\hmfconv[i]=(F^\uparrow[i+1]-F^\uparrow[i])-(F^\downarrow[i+1]-F^\downarrow[i])\)
+			\end{itemize}
+	\end{itemize}
+\end{block}
 \end{frame}
 
 \begin{frame}
-	\frametitle{基礎方程式}
-	\small
-	\begin{block}{湿潤偽断熱減率}
-		\begin{equation}
-			\qty(\pdv{T}{p})_\text{湿潤偽断熱}=
-			\left.\qty(\frac{RT}{pc_{pn}}+\frac{x_v}{x_n}\frac{l}{pc_{pn}})\middle/
-			\qty(x_n+x_v\frac{c_{pv}}{c_{pn}}+\frac{x_v}{x_n}\frac{l^2}{RT^2c_{pn}})\right.
-		\end{equation}
-	\end{block}
-	\begin{block}{光学的厚さ}
-		\begin{equation}
-			\dv{\tau}{p}=\frac{\kappa_vx_vm_v+\kappa_nx_nm_n}{\bar mg}
-		\end{equation}
-	\end{block}
-	\begin{block}{放射フラックスの計算}
-		\begin{equation}
-			A=\frac{3}{2}\pi B[\tau']\exp\qty[-\frac{3}{2}(\tau'-\tau)]
-		\end{equation}
-	\end{block}
+	\frametitle{大西プログラムの計算手順}
+	\begin{enu}[series=pros]
+		\item 初期値設定
+		\item 湿潤断熱減率に従って、上空まで温度、フラックスを計算
+			\begin{block}{湿潤偽断熱減率}
+				\begin{equation}
+					\qty(\pdv{T}{p})_\text{湿潤偽断熱}=
+					\left.\qty(\frac{RT}{pc_{pn}}+\frac{x_v}{x_n}\frac{l}{pc_{pn}})\middle/
+					\qty(x_n+x_v\frac{c_{pv}}{c_{pn}}+\frac{x_v}{x_n}\frac{l^2}{RT^2c_{pn}})\right.
+				\end{equation}
+			\end{block}
+	\end{enu}
+\end{frame}
+
+\begin{frame}
+	\frametitle{大西プログラムの計算手順}
+	\begin{enu}[resume*=pros]
+		\item 対流圏界面の計算
+		\item 対流圏界面を挿入
+		\item 圏界面水蒸気混合比で飽和
+		\item 光学的厚さの計算
+			\begin{block}{光学的厚さ}
+				\begin{equation}
+					\dv{\tau}{p}=\frac{\kappa_vx_vm_v+\kappa_nx_nm_n}{\bar mg}
+				\end{equation}
+			\end{block}
+	\end{enu}
+\end{frame}
+
+\begin{frame}
+	\frametitle{大西プログラムの計算手順}
+	\begin{enu}[resume*=pros]
+		\item 放射平衡計算（これをループする）
+			\begin{enu}
+				\item 加熱 (\hmfnc{calc\_RaiseTemp})
+				\item 圏界面の計算 (\hmfnc{calc\_Tropopause})
+					\begin{block}{放射フラックスの計算}
+						\begin{equation}
+							A=\frac{3}{2}\pi B[\tau']\exp\qty[-\frac{3}{2}(\tau'-\tau)]
+						\end{equation}
+					\end{block}
+				\item 圏界面移動
+				\item 収束判定
+				\item 圏界面の計算 (\hmfnc{calc\_Tropopause})
+				\item 圏界面移動
+			\end{enu}
+	\end{enu}
 \end{frame}
 
 \begin{frame}
 	\frametitle{計算結果}
-	\begin{center}
-		\scriptsize
-		\begin{tikzpicture}
-			\begin{axis}[
-				xmin=250,xmax=345,ymin=200,ymax=400,
-				ylabel={OLR (\(F^\uparrow_\hmTOA\)) [\hmu*{W/m^{-2}}]},
-				xlabel={地表面温度 (\(T_s\)) [\hmu*{K}]},
-				title={再現実験で得られた結果},
-				x=.005\linewidth,y=.002\linewidth,
-			]
-			\addplot[mark=*,mark size=.25ex]coordinates{
-					(250,220.322) (255,237.744) (260,255.731) (265,274.018)
-					(270,292.099) (275,309.447) (280,325.191) (285,338.276)
-					(290,347.868) (295,353.425) (300,355.084) (305,353.621)
-					(310,350.094) (315,345.337) (320,339.706) (325,333.928)
-					(330,326.817) (335,320.34) (340,314.588) (345,310.175)
-				};
-		\end{axis}
-		\end{tikzpicture}
-	\end{center}
+	\begin{columns}
+		\begin{column}{.5\textwidth}
+			\scriptsize
+			\begin{tikzpicture}
+				\begin{axis}[
+					xmin=250,xmax=345,ymin=200,ymax=400,
+					ylabel={OLR (\(F^\uparrow_\hmTOA\)) [\hmu*{W/m^{-2}}]},
+					xlabel={地表面温度 (\(T_s\)) [\hmu*{K}]},
+					title={再現実験で得られた結果},
+					x=.009\linewidth,y=.004\linewidth,
+					]
+					\addplot[mark=*,mark size=.25ex]coordinates{
+							(250,220.322) (255,237.744) (260,255.731) (265,274.018)
+							(270,292.099) (275,309.447) (280,325.191) (285,338.276)
+							(290,347.868) (295,353.425) (300,355.084) (305,353.621)
+							(310,350.094) (315,345.337) (320,339.706) (325,333.928)
+							(330,326.817) (335,320.34) (340,314.588) (345,310.175)
+						};
+				\end{axis}
+			\end{tikzpicture}
+		\end{column}
+		\begin{column}{.5\textwidth}
+			\begin{itemize}
+				\item Nakajima et al.\ (1992) と同様の結果を得られた
+				\item \(T_s\geq350\hmu{K}\) では計算をすることに失敗している
+					\begin{itemize}
+						\item 収束条件に達しない
+						\item プログラムが実行中に落ちる
+					\end{itemize}
+			\end{itemize}
+		\end{column}
+	\end{columns}
+\end{frame}
+
+\begin{frame}
+	\frametitle{まとめと今後の展望}
+	\begin{block}{まとめ}
+		\begin{itemize}
+			\item OLR には、大気の成分に応じて異なる上限がある
+				\begin{itemize}
+					\item 水蒸気量が極端に少ないときに現れる、Komabayashi--Ingersoll limit
+					\item ある程度水蒸気が存在するときに現れる上限
+				\end{itemize}
+			\item Nakajima et al.\ の再現実験を行ったところ、同様の結果を得られた
+		\end{itemize}
+	\end{block}
+	\begin{block}{今後の展望}
+		\begin{itemize}
+			\item 大西プログラムが実行中に落ちる原因を究明する必要
+			\item 地球放射での射出限界について詳しく検討したい
+				\begin{itemize}
+					\item さらに、系外惑星に関しても検討したい
+					\item 系外惑星の放射計算ためには、研究室で用いられる
+						GCM の改良が必要になるだろう
+				\end{itemize}
+		\end{itemize}
+	\end{block}
 \end{frame}
 
 \begin{frame}
 	\frametitle{DCPAM の概要}
+	\small
 	\begin{itemize}
 		\item GFD 研究室で利用している、大気大循環モデル
 		\item 惑星全体の温度、風速、密度分布を計算
