@@ -93,7 +93,8 @@
 	Ligatures=TeX,
 	Scale=0.98,
 	BoldFont=FOT-RodinNTLGPro-B,
-	ItalicFont=FOT-RodinNTLGPro-B,
+	BoldItalicFont=FOT-RodinNTLGPro-B,
+	%ItalicFont=FOT-RodinNTLGPro-B,
 ]{Palatino}
 \setmainjfont[
 	Ligatures=TeX,
@@ -131,11 +132,12 @@
 \newcommand{\hme}[1]{\times10^{#1}}
 \newcommand{\hmfnc}[1]{\(\mathrm{#1}\)}
 \newcommand{\hmfconv}{F_\mathrm{conv}}
+\NewDocumentCommand\etal{s}{\textit{et al.}\IfBooleanF{#1}{\ }}
 
 \renewcommand{\qty}{\hmqty}
 
 \author{北海道大学大学院理学院 地球流体力学研究室 M1 人見祥磨}
-\title{多様な惑星の放射計算に向けて\\---Nakajima et al.\ (1992) の再現実験}
+\title{多様な惑星の放射計算に向けて\\---Nakajima \etal (1992) の再現実験}
 
 \begin{document}
 
@@ -148,11 +150,11 @@
 	\begin{columns}[T,onlytextwidth]
 		\begin{column}{.5\textwidth}
 			\begin{itemize}
-				\item 惑星の生命居住可能性を調べたい
+				\item 惑星の生命居住可能性が議論されている
 				\item 生命が存在するためには、惑星表面に液体の水があることが重要だと考えられる
 					\begin{itemize}
-						\item 惑星表面に液体の水が存在しうる領域は、ハビタブルゾーン (HZ)
-							と呼ばれる
+						\item 惑星表面に液体の水が存在する条件は、惑星の表面温度で決まる
+						\item 1 気圧なら 0 ℃ から 100 ℃
 					\end{itemize}
 			\end{itemize}
 		\end{column}
@@ -163,48 +165,56 @@
 		\end{column}
 	\end{columns}
 	\begin{itemize}
-		\item 惑星表面に液体の水が存在しうるかを、惑星の温度を計算することで検討することができる
-		\item 惑星の温度決定の第一歩として、一次元放射対流平衡計算を行うことにした
+		\item 惑星表面に液体の水が存在しうる領域は、ハビタブルゾーン (HZ)
+			と呼ばれる
+		\item HZ の内側境界を決定したい
 	\end{itemize}
 \end{frame}
 
 \begin{frame}
-	\frametitle{動機}
+	\frametitle{暴走温室状態}
 	\begin{itemize}
-		\item 一方、惑星の居住可能性に関して、暴走温室状態が議論されてきた
+		\item HZ の内側境界を決定する重要な事象として、暴走温室状態が議論されている
 			\begin{itemize}
-				\item 惑星が射出できる放射フラックスには上限（射出限界）があると示された
-				\item 射出限界を超えた太陽放射が入射すると、暴走温室状態になる
+				\item 暴走温室状態とは、温度が上昇すると水蒸気量が増え、温室効果をもつ水蒸気が
+					増大することでさらに地表面温度が上昇する、正のフィードバックによって、温度
+					が上昇し続けると想像される状態
+				\item 惑星が射出する放射フラックスを超えた太陽放射が入射すると、
+					海洋と大気が平衡状態になれず、海洋が蒸発し、暴走温室状態になる
+					(Nakajima \etal*, 1992)
+				\item 惑星が射出できる放射フラックスには上限（射出限界）がある
+					(Komabayashi, 1967, 1968; Ingersoll, 1969)
 			\end{itemize}
-		\item 現在、射出限界について整理した Nakajima et al.\ (1992) の再現計算を行っている
-		\item 射出限界に関して述べた、Komabayashi (1967, 1968), Ingersoll (1969) の
-			レビューを行い、現在行っている再現実験の結果を報告する
+		\item 暴走温室状態を理解するため、射出限界について整理した Nakajima \etal (1992) の再現計算を行っている
+		\item この発表では、射出限界に関する先行研究の紹介を行い、現在行っている再現実験の結果を報告する
 	\end{itemize}
-	\begin{block}{暴走温室状態とは}
-		\small
-		温度が上昇すると水蒸気量が増え、温室効果をもつ水蒸気が増大することで
-		さらに地表面温度が上昇する、正のフィードバックによって、温度が上昇し続ける状態
-	\end{block}
 \end{frame}
 
 \begin{frame}
-	\frametitle{Komabayashi (1967, 1968)、Ingersoll (1969) のモデル}
-	
-			\small
-				\centering
+	\frametitle{成層圏モデル}
+	\begin{itemize}
+		\item Komabayashi (1967, 1968), Ingersoll (1969)
+		\item いずれも、成層圏のみを考慮したモデル
+			\begin{table}
+				\centering\small
 				\begin{tabular}{rll}
 					\hline
-					&Komabayashi&Ingersoll\\
-					\hline
+					 &Komabayashi&Ingersoll\\
+					 \hline
 					成層圏&放射平衡&放射平衡\\
 					成層圏&飽和水蒸気&一定のモル分率\\
 					対流圏界面&考慮されていない&飽和水蒸気\\
 					対流圏&考慮されていない&考慮されていない\\
 					放射過程&散乱なし、灰色&散乱なし、灰色\\
 					成分&理想気体、1 成分&理想気体、2 成分\\
-					臨界点&なし\\
+					臨界点&不明確&不明確\\
 					\hline
 				\end{tabular}
+			\end{table}
+		\item この単純なモデルから、大気上端での上向き放射フラックス
+			(Outgoing longwave radiation; OLR, \(F^\uparrow_\hmTOA\))
+			に上限があると示した \hmemph{(Komabayashi--Ingersoll limit)}
+	\end{itemize}
 \end{frame}
 
 \begin{frame}
@@ -212,9 +222,12 @@
 	\begin{columns}[T]
 		\begin{column}{.5\textwidth}
 			\begin{itemize}
-				\item Komabayashi や Ingersoll  が外向き赤外放射の上限を得た
+				\footnotesize
+				\item モデルの基礎方程式から導くことができる
+				\item 非凝縮成分の吸収係数は \(0\) とする
 			\end{itemize}
-			\begin{block}{放射フラックス密度}\tiny
+			\begin{block}{放射フラックス密度}
+				\tiny
 				\begin{gather}
 					F^\uparrow[\tau]=
 					\pi B[\tau]-\int^\tau_{\tau_b}\qty[\dv{}{\tau'}[\pi B[\tau']]
@@ -235,7 +248,8 @@
 			\end{block}
 		\end{column}
 		\begin{column}{.5\textwidth}
-			\begin{block}{光学的厚さの式}\tiny
+			\begin{block}{光学的厚さの式}
+				\tiny
 				\begin{equation}
 					d\tau=(\kappa_vx_vm_v+\kappa_nx_nm_n)\frac{dp}{\bar mg}
 				\end{equation}
@@ -246,24 +260,101 @@
 				\end{equation}
 				ただし、\(p*\) は飽和水蒸気圧で、添字 \(\hmtp\) は対流圏界面での値
 			\end{block}
-			\begin{block}{\eqref{rad} 式 \eqref{tau} 式 の対流圏界面での値}\tiny
+			\begin{block}{\eqref{rad} 式 \eqref{tau} 式 の対流圏界面での値}
+				\tiny
 				\begin{gather}
-					(1/2)F^\uparrow_\hmTOA((3/2)\tau_\hmtp+1)=\sigma T^4_\hmtp\\
-					\tau_\hmtp=\kappa_vp^*[T_\hmtp]m_v/(\bar mg)
+					(1/2)F^\uparrow_\hmTOA((3/2)\tau_\hmtp+1)=\sigma T^4_\hmtp\label{radtp}\\
+					\tau_\hmtp=\kappa_vp^*[T_\hmtp]m_v/(\bar mg)\label{tautp}
 				\end{gather}
-				この 2 式が解をもつ条件が Komabayashi--Ingersoll limit
+				この 2 式が解をもつ \(F^\uparrow_\hmTOA\) の上限が Komabayashi--Ingersoll limit
 			\end{block}
 		\end{column}
 	\end{columns}
 \end{frame}
 
 \begin{frame}
-	\frametitle{Nakajima et al.\ (1992)}
+	\frametitle{Komabayashi--Ingersoll limit}
+	\begin{columns}
+		\begin{column}{.55\textwidth}
+			\begin{block}{\eqref{radtp} 式 \eqref{tautp} 式（再掲）}
+				\begin{gather}
+					\frac{1}{2}F^\uparrow_\hmTOA\qty(\frac{3}{2}\tau_\hmtp+1)=\sigma T^4_\hmtp\tag{\ref{radtp}}\\
+					\tau_\hmtp=\kappa_vp^*[T_\hmtp]\frac{m_v}{\bar mg}\tag{\ref{tautp}}
+				\end{gather}
+			\end{block}
+			\begin{itemize}
+				\item \(F^\uparrow_\hmTOA\) がある値を超えると、\(\tau_\hmtp\) と
+					\(T_\hmtp\) の平衡解が存在しなくなる
+				\item 地球的パラメータのもとでは \(385\hmu{W/m^2}\) (Nakajima \etal*, 1992)
+			\end{itemize}
+		\end{column}
+		\begin{column}{.45\textwidth}
+			\centering
+			\includegraphics[width=\textwidth]{nakajima1.png}\\
+			\scriptsize
+			\(\tau_\hmtp\) と \(T_\hmtp\) の関係図\\
+			直線が式 \eqref{tautp} で、曲線が式 \eqref{radtp}\\
+			(Nakajima \etal Fig.~1)
+		\end{column}
+	\end{columns}
+\end{frame}
+
+\begin{frame}
+	\frametitle{対流圏モデル}
+	\small
+	\begin{columns}[T,onlytextwidth]
+		\begin{column}{.7\textwidth}
+			\begin{itemize}
+				\item Kasting (1988), Abe and Matsui (1988)
+				\item より精密な過程を持ち、対流圏も考慮したモデルを用いた研究
+					\begin{table}
+						\tiny
+						\centering
+						\begin{tabular}{rll}
+							\hline
+							 &Kasting&Abe and Matusi\\
+							\hline
+							成層圏&等温&放射平衡\\
+							成層圏&一定のモル分率&一定のモル分率\\
+							対流圏界面&飽和水蒸気&飽和水蒸気\\
+							対流圏&飽和、断熱減率&飽和、断熱減率\\
+							放射過程&散乱あり、吸収は波長依存&散乱あり、吸収は波長依存\\
+							成分&\(\ce{N2, O2, CO2, H2O}\)&\(\ce{CO2, H2O}\)\\
+							臨界点&\(647.1\hmu{K}\)&\(647.1\hmu{K}\)\\
+							\hline
+						\end{tabular}
+					\end{table}
+			\end{itemize}
+		\end{column}
+		\begin{column}{.3\textwidth}
+			\centering
+			\includegraphics[width=\textwidth]{kasting7a.png}\\
+			\tiny
+			Kasting による、表面温度 \(T_s\) と外向き赤外放射 \(F_\mathrm{IR}\) の関係
+			(Kasting Fig.~7a)
+		\end{column}
+	\end{columns}
 	\begin{itemize}
-		\item 表面温度 \(T_s\) と大気上端での上向き放射フラックス
-			(Outgoing longwave radiation; OLR, \(F^\uparrow_\hmTOA\))
-			の関係を調べたもの
+		\item いずれの結果も \(300\hmu{W/m^2}\) 付近に射出限界がある
+			(Nakajima \etal*, 1992)
+			\begin{itemize}
+				\item Kasting では、\(F^\uparrow_\hmTOA\sim300\hmu{W/m^2}\) で \(T_s\)
+					が急激に上昇する
+				\item Abe and Matusi は \(F^\uparrow_\hmTOA\sim305\hmu{W/m^2}\) で
+					大気と海洋が平衡状態で共存できないと示した
+			\end{itemize}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Nakajima \etal (1992)}
+	\begin{itemize}
+		\item 表面温度 \(T_s\) と OLR の関係を調べ、考察したもの
 		\item OLR には上限が存在することがわかった
+			\begin{itemize}
+				\item Abe and Matusi や Kasting による上限と、
+					Komabayashi--Ingersoll limit は別の原因であるとわかった
+			\end{itemize}
 	\end{itemize}
 	\begin{columns}[onlytextwidth,T]
 		\begin{column}{.6\textwidth}
@@ -280,13 +371,13 @@
 			\centering\scriptsize
 			\includegraphics[width=\textwidth]{nakajima6.png}\\
 			大気下端の水蒸気量 \(p_0\) を変化させたときの \(F^\uparrow_\hmTOA\) と
-			\(T_s\) の関係 (Nakajima et al\ Fig.~6)
+			\(T_s\) の関係 (Nakajima \etal Fig.~6)
 		\end{column}
 	\end{columns}
 \end{frame}
 
 \begin{frame}
-	\frametitle{Nakajima et al.\ のモデル設定}
+	\frametitle{Nakajima \etal のモデル設定}
 	\begin{itemize}
 		\item 一次元放射対流平衡モデル
 		\item 成層圏は放射平衡
@@ -333,38 +424,36 @@
 \end{frame}
 
 \begin{frame}
-	\frametitle{Nakajima et al.\ の結果}
-	\begin{itemize}
-		\item （Fig.~3 の説明）
-	\end{itemize}
-\end{frame}
-
-\begin{frame}
-	\frametitle{Nakajima et al.\ (1992) 再現実験}
-	\begin{itemize}
-		\item 神戸大学の大西さんが 2012 年に作成したプログラムを用いて、再現実験を行っている
-		\item 地表面温度がある値のときに、OLR がどのような値をとるか計算するプログラム
-	\end{itemize}
-\end{frame}
-
-\begin{frame}
-	\frametitle{大西プログラムの概要}
-	\begin{block}{モデルの変数}
-		\begin{itemize}
-			\item Nakajima et al.\ Fig.~3 と同様の条件
-			\item \(c_{pn}=3.5R, c_{pv}=4R, \kappa_v=0.01, \kappa_n=0, p_{n0}=1\hme{5}\hmu{Pa}\)
-		\end{itemize}
-	\end{block}
-	\begin{block}{グリッドの与え方}
-	\begin{itemize}
-		\item 鉛直 1 次にグリッドを設ける
-		\item グリッド上に \(p,T,\tau,F^\uparrow,F^\downarrow\) を与える
-		\item グリッド間に \(\hmfconv\) を与える
+	\frametitle{Nakajima \etal の結果}
+	\begin{columns}[c]
+		\begin{column}{.6\textwidth}
+			\centering
+			\includegraphics[width=\textwidth]{nakajima3-cpp-crop.pdf}\\
+		\end{column}
+		\begin{column}{.4\textwidth}
+			\small
 			\begin{itemize}
-				\item \(\hmfconv[i]=(F^\uparrow[i+1]-F^\uparrow[i])-(F^\downarrow[i+1]-F^\downarrow[i])\)
+			\item \(\kappa_v=0, p_{n0}=10^5\hmu{Pa}\) のときの \(T_s\) と OLR の関係
+				(Nakajima \etal Fig.~3 を改変)
+			\item Komabayashi--Ingersoll limit より小さい値で射出限界になる
+			\item \(T_s>400\hmu{K}\) で \(F^\uparrow_\hmTOA\sim293\hmu{W/m^2}\) に漸近
+		\end{itemize}
+	\end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Nakajima \etal (1992) 再現実験}
+	\begin{itemize}
+		\item 神戸大学の大西さんが 2012 年に作成したプログラムを用いて、
+			Nakajima \etal (1992) Fig.~3 を再現する実験を行っている
+		\item モデルの設定は Nakajima \etal (1992) と同様
+			\begin{itemize}
+				\item 対流圏も考慮した鉛直 1 次元モデル
+				\item モデル変数も Nakajima \etal (1992) と同様で、
+					\(c_{pn}=3.5R, c_{pv}=4R, \kappa_v=0.01\hmu{m^2/kg}, \kappa_n=0, p_{n0}=1\hme{5}\hmu{Pa}\)
 			\end{itemize}
 	\end{itemize}
-\end{block}
 \end{frame}
 
 \begin{frame}
@@ -372,28 +461,30 @@
 	\begin{enu}[series=pros]
 		\item 初期値設定
 		\item 湿潤断熱減率に従って、上空まで温度、フラックスを計算
-			\begin{block}{湿潤偽断熱減率}
-				\begin{equation}
-					\qty(\pdv{T}{p})_\text{湿潤偽断熱}=
-					\left.\qty(\frac{RT}{pc_{pn}}+\frac{x_v}{x_n}\frac{l}{pc_{pn}})\middle/
-					\qty(x_n+x_v\frac{c_{pv}}{c_{pn}}+\frac{x_v}{x_n}\frac{l^2}{RT^2c_{pn}})\right.
-				\end{equation}
-			\end{block}
-	\end{enu}
-\end{frame}
-
-\begin{frame}
-	\frametitle{大西プログラムの計算手順}
-	\begin{enu}[resume*=pros]
+			\begin{itemize}
+				\scriptsize
+				\item 湿潤偽断熱減率
+					\begin{equation}
+						\qty(\pdv{T}{p})_\text{湿潤偽断熱}=
+						\left.\qty(\frac{RT}{pc_{pn}}+\frac{x_v}{x_n}\frac{l}{pc_{pn}})\middle/
+						\qty(x_n+x_v\frac{c_{pv}}{c_{pn}}+\frac{x_v}{x_n}\frac{l^2}{RT^2c_{pn}})\right.
+					\end{equation}
+%				\item 放射フラックスの計算式
+%					\begin{equation}
+%						F=\frac{3}{2}\pi B[\tau']\exp\qty[-\frac{3}{2}(\tau'-\tau)]
+%					\end{equation}
+			\end{itemize}
 		\item 対流圏界面の計算
+			\begin{itemize}
+				\item フラックスの発散 \(\hmfconv\) が \(0\) になる場所を決定
+			\end{itemize}
 		\item 対流圏界面を挿入
 		\item 圏界面水蒸気混合比で飽和
 		\item 光学的厚さの計算
-			\begin{block}{光学的厚さ}
-				\begin{equation}
-					\dv{\tau}{p}=\frac{\kappa_vx_vm_v+\kappa_nx_nm_n}{\bar mg}
-				\end{equation}
-			\end{block}
+			\begin{equation}
+				\scriptsize
+				\dv{\tau}{p}=\frac{\kappa_vx_vm_v+\kappa_nx_nm_n}{\bar mg}
+			\end{equation}
 	\end{enu}
 \end{frame}
 
@@ -401,18 +492,22 @@
 	\frametitle{大西プログラムの計算手順}
 	\begin{enu}[resume*=pros]
 		\item 放射平衡計算（これをループする）
-			\begin{enu}
-				\item 加熱 (\hmfnc{calc\_RaiseTemp})
-				\item 圏界面の計算 (\hmfnc{calc\_Tropopause})
-					\begin{block}{放射フラックスの計算}
-						\begin{equation}
-							A=\frac{3}{2}\pi B[\tau']\exp\qty[-\frac{3}{2}(\tau'-\tau)]
-						\end{equation}
-					\end{block}
+			\begin{enu}[series=rad]
+				\item 加熱
+					\begin{itemize}
+						\item \(\hmfconv\) と大気の熱容量から成層圏の温度を上昇させる
+							\begin{equation}
+								\scriptsize
+								\Delta T=\frac{mg}{c_p}\frac{\hmfconv[k]}{p[k+1]-p[k]}\delta t
+							\end{equation}
+						\item 対流圏は湿潤偽断熱減率に従う
+					\end{itemize}
+				\item 圏界面の計算
 				\item 圏界面移動
 				\item 収束判定
-				\item 圏界面の計算 (\hmfnc{calc\_Tropopause})
-				\item 圏界面移動
+					\begin{itemize}
+						\item \(\hmfconv\) の総和が十分小さくなれば計算終了
+					\end{itemize}
 			\end{enu}
 	\end{enu}
 \end{frame}
@@ -442,10 +537,16 @@
 		\end{column}
 		\begin{column}{.5\textwidth}
 			\begin{itemize}
-				\item Nakajima et al.\ (1992) と同様の結果を得られた
+				\item Nakajima \etal (1992) と同様の結果を得られた
 				\item \(T_s\geq350\hmu{K}\) では計算をすることに失敗している
 					\begin{itemize}
 						\item 収束条件に達しない
+							\begin{itemize}
+								\scriptsize
+								\item \(\hmfconv\) の和が \(10^{-6}\hmu{W/m^2}\) 未満にならない
+								\item \(345\hmu{K}\) は収束が遅かったので、
+									\(\hmfconv\) の和が \(10^{-1}\hmu{W/m^2}\) 未満で計算終了とした
+							\end{itemize}
 						\item プログラムが実行中に落ちる
 					\end{itemize}
 			\end{itemize}
@@ -455,27 +556,28 @@
 
 \begin{frame}
 	\frametitle{まとめと今後の展望}
-	\begin{block}{まとめ}
-		\begin{itemize}
-			\item OLR には、大気の成分に応じて異なる上限がある
-				\begin{itemize}
-					\item 水蒸気量が極端に少ないときに現れる、Komabayashi--Ingersoll limit
-					\item ある程度水蒸気が存在するときに現れる上限
-				\end{itemize}
-			\item Nakajima et al.\ の再現実験を行ったところ、同様の結果を得られた
-		\end{itemize}
-	\end{block}
-	\begin{block}{今後の展望}
-		\begin{itemize}
-			\item 大西プログラムが実行中に落ちる原因を究明する必要
-			\item 地球放射での射出限界について詳しく検討したい
-				\begin{itemize}
-					\item さらに、系外惑星に関しても検討したい
-					\item 系外惑星の放射計算ためには、研究室で用いられる
-						GCM の改良が必要になるだろう
-				\end{itemize}
-		\end{itemize}
-	\end{block}
+	\begin{itemize}
+		\item まとめ
+			\begin{itemize}
+				\item OLR には、大気の成分に応じて異なる上限がある
+					\begin{itemize}
+						\item 水蒸気量が極端に少ないときに現れる、Komabayashi--Ingersoll limit
+						\item ある程度水蒸気が存在するときに現れる上限
+					\end{itemize}
+				\item Nakajima \etal の再現実験を行ったところ、
+					Nakajima \etal と同様の結果を得られた
+			\end{itemize}
+		\item 今後の展望
+			\begin{itemize}
+				\item 大西プログラムが実行中に落ちる原因を究明する必要
+				\item 地球放射での射出限界について詳しく検討したい
+					\begin{itemize}
+						\item さらに、系外惑星に関しても検討したい
+						\item 系外惑星の放射計算ためには、研究室で用いられる
+							GCM の改良が必要になるだろう
+					\end{itemize}
+			\end{itemize}
+	\end{itemize}
 \end{frame}
 
 \begin{frame}
@@ -500,9 +602,11 @@
 						\item 陸面過程
 					\end{itemize}
 			\end{desc}
+		\item 放射過程で、太陽放射と同じスペクトルの入射を仮定しているため、
+			太陽放射以外も扱えるように改良する必要
 	\end{itemize}
 	\begin{tikzpicture}[remember picture,overlay]
-		\node at(current page.south east)[align=center,above left=2em]
+		\node at(current page.north east)[align=center,below left=3em]
 			{\includegraphics[width=8\zh]{dcpam.png}\\{\scriptsize 「DCPAM の概要」より}};
 	\end{tikzpicture}
 \end{frame}
