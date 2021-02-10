@@ -1,7 +1,7 @@
 % +++
 % latex="lualatex"
 % +++
-\documentclass[aspectratio=149]{beamer}
+\documentclass[aspectratio=149,9pt]{beamer}
 \usetheme[numbering=fraction,block=fill]{metropolis}
 \usefonttheme{professionalfonts}
 
@@ -59,7 +59,7 @@
 \DeclareMathSymbol{5}\mathord{numbers}{`5}
 \DeclareMathSymbol{6}\mathord{numbers}{`6}
 \DeclareMathSymbol{7}\mathord{numbers}{`7}
-\DeclareMathSymbol{8}\mathord{numbers}{`7}
+\DeclareMathSymbol{8}\mathord{numbers}{`8}
 \DeclareMathSymbol{9}\mathord{numbers}{`9}
 
 \DeclareFontFamily{U}{mathastro}{}
@@ -137,7 +137,7 @@
 \renewcommand{\qty}{\hmqty}
 
 \author{北海道大学大学院理学院 地球流体力学研究室 M1 人見祥磨}
-\title{多様な惑星の放射計算に向けて\\---Nakajima \etal (1992) の再現実験}
+\title{多様な地球型惑星の射出限界の考察に向けて\\---Nakajima \etal (1992) の再現実験}
 
 \begin{document}
 
@@ -150,7 +150,8 @@
 	\begin{columns}[T,onlytextwidth]
 		\begin{column}{.5\textwidth}
 			\begin{itemize}
-				\item 惑星の生命居住可能性が議論されている
+				\item 観測によって、太陽系外の恒星にも惑星が存在することが明らかになった
+				\item 系外惑星にも生命が存在するのかが議論になっている
 				\item 生命が存在するためには、惑星表面に液体の水があることが重要だと考えられる
 					\begin{itemize}
 						\item 惑星表面に液体の水が存在する条件は、惑星の表面温度で決まる
@@ -165,8 +166,8 @@
 		\end{column}
 	\end{columns}
 	\begin{itemize}
-		\item 惑星表面に液体の水が存在しうる領域は、ハビタブルゾーン (HZ)
-			と呼ばれる
+		\item 惑星表面に液体の水が存在しうる領域は、ハビタブルゾーン (HZ)と呼ばれる
+		\item HZ の内側の、比較的高温な領域で起こる現象に興味がある
 		\item HZ の内側境界を決定したい
 	\end{itemize}
 \end{frame}
@@ -176,16 +177,17 @@
 	\begin{itemize}
 		\item HZ の内側境界を決定する重要な事象として、暴走温室状態が議論されている
 			\begin{itemize}
-				\item 暴走温室状態とは、温度が上昇すると水蒸気量が増え、温室効果をもつ水蒸気が
-					増大することでさらに地表面温度が上昇する、正のフィードバックによって、温度
-					が上昇し続けると想像される状態
+				\item 惑星が射出できる放射フラックスには上限（射出限界）がある
+					(Komabayashi, 1967, 1968; Ingersoll, 1969)
 				\item 惑星が射出する放射フラックスを超えた太陽放射が入射すると、
 					海洋と大気が平衡状態になれず、海洋が蒸発し、暴走温室状態になる
 					(Nakajima \etal*, 1992)
-				\item 惑星が射出できる放射フラックスには上限（射出限界）がある
-					(Komabayashi, 1967, 1968; Ingersoll, 1969)
+				\item 暴走温室状態とは、温度が上昇すると水蒸気量が増え、温室効果をもつ水蒸気が
+					増大することでさらに地表面温度が上昇する、正のフィードバックによって、温度
+					が上昇し続けると想像される状態
 			\end{itemize}
-		\item 暴走温室状態を理解するため、射出限界について整理した Nakajima \etal (1992) の再現計算を行っている
+		\item 暴走温室状態や射出限界について、Nakajima \etal (1992) が整理を行った
+		\item 現在、Nakajima \etal (1992) を理解することを目的としている
 		\item この発表では、射出限界に関する先行研究の紹介を行い、現在行っている再現実験の結果を報告する
 	\end{itemize}
 \end{frame}
@@ -194,12 +196,16 @@
 	\frametitle{成層圏モデル}
 	\begin{itemize}
 		\item Komabayashi (1967, 1968), Ingersoll (1969)
+			\begin{itemize}
+				\item Komabayashi は気候の安定性について、
+					Ingersoll は金星大気の進化について調べた
+			\end{itemize}
 		\item いずれも、成層圏のみを考慮したモデル
 			\begin{table}
 				\centering\small
 				\begin{tabular}{rll}
 					\hline
-					 &Komabayashi&Ingersoll\\
+					 &Komabayashi (1967)&Ingersoll (1969)\\
 					 \hline
 					成層圏&放射平衡&放射平衡\\
 					成層圏&飽和水蒸気&一定のモル分率\\
@@ -207,7 +213,7 @@
 					対流圏&考慮されていない&考慮されていない\\
 					放射過程&散乱なし、灰色&散乱なし、灰色\\
 					成分&理想気体、1 成分&理想気体、2 成分\\
-					臨界点&不明確&不明確\\
+					臨界点&陽には考慮せず&陽には考慮せず\\
 					\hline
 				\end{tabular}
 			\end{table}
@@ -219,55 +225,71 @@
 
 \begin{frame}
 	\frametitle{Komabayashi--Ingersoll Limit}
-	\begin{columns}[T]
-		\begin{column}{.5\textwidth}
+	\footnotesize
+	\begin{columns}
+		\begin{column}{.8\textwidth}
 			\begin{itemize}
-				\footnotesize
 				\item モデルの基礎方程式から導くことができる
-				\item 非凝縮成分の吸収係数は \(0\) とする
+					\begin{itemize}\scriptsize
+						\item 放射フラックス密度の式
+							\begin{gather}
+								F^\uparrow[\tau]=
+								\pi B[\tau]-\int^\tau_{\tau_b}\qty[\dv{}{\tau'}[\pi B[\tau']]
+								\exp\left[-\frac{3}{2}(\tau'-\tau)\right]]d\tau'\label{fup}
+								\\
+								F^\downarrow[\tau]=
+								\pi B[\tau]-\int^\tau_0\qty[\dv{}{\tau'}[\pi B[\tau']]
+								\exp\left[-\frac{3}{2}(\tau-\tau')\right]]d\tau'
+								-\pi B[0]\exp\left[-\frac{3}{2}\tau\right]\label{fdown}
+							\end{gather}
+						\item 光学的厚さの式
+							\begin{equation}
+								d\tau=(\kappa_vx_vm_v+\kappa_nx_nm_n)\frac{dp}{\bar mg}\label{dtdp}
+							\end{equation}
+						\item \eqref{fup} \eqref{fdown} より以下の式を得る
+							\begin{equation}
+								\pi B[\tau]=(1/2)F^\uparrow_\hmTOA((3/2)\tau+1)
+								\label{rad}
+							\end{equation}
+						\item \eqref{dtdp} を大気上端から圧力 \(p\) の高度まで積分して以下を得る
+							\begin{equation}
+								\tau[p]=(\kappa_vm_vp^*[T_\hmtp]+\kappa_nm+n(p_\hmtp-p^*[T_\hmtp]))
+								(p/p_\hmtp)(1/(\bar mg))\label{tau}
+							\end{equation}
+							ただし、\(p*=p^*_0\exp[-l/(RT)]\) は飽和水蒸気圧で、添字 \(\hmtp\) は対流圏界面での値
+						\item \eqref{rad} 式 \eqref{tau} 式 の対流圏界面での値を求める
+							（非凝縮成分の吸収係数は \(0\) とする）
+							\begin{gather}
+								(1/2)F^\uparrow_\hmTOA((3/2)\tau_\hmtp+1)=\sigma T^4_\hmtp\label{radtp}\\
+								\tau_\hmtp=\kappa_vp^*[T_\hmtp]m_v/(\bar mg)\label{tautp}
+							\end{gather}
+							この 2 式が解をもつ \(F^\uparrow_\hmTOA\) の上限が Komabayashi--Ingersoll limit
+					\end{itemize}
 			\end{itemize}
-			\begin{block}{放射フラックス密度}
-				\tiny
-				\begin{gather}
-					F^\uparrow[\tau]=
-					\pi B[\tau]-\int^\tau_{\tau_b}\qty[\dv{}{\tau'}[\pi B[\tau']]
-					\exp\left[-\frac{3}{2}(\tau'-\tau)\right]]d\tau'
-					\\
-					\begin{split}
-						F^\downarrow[\tau]=
-						\pi B[\tau]-\int^\tau_0\qty[\dv{}{\tau'}[\pi B[\tau']]
-						\exp\left[-\frac{3}{2}(\tau-\tau')\right]]d\tau'\\
-						-\pi B[0]\exp\left[-\frac{3}{2}\tau\right]
-					\end{split}
-				\end{gather}
-				この 2 式より
-				\begin{equation}
-					\pi B[\tau]=\frac{1}{2}F^\uparrow_\hmTOA\qty(\frac{3}{2}\tau+1)
-					\label{rad}
-				\end{equation}
-			\end{block}
 		\end{column}
-		\begin{column}{.5\textwidth}
-			\begin{block}{光学的厚さの式}
-				\tiny
-				\begin{equation}
-					d\tau=(\kappa_vx_vm_v+\kappa_nx_nm_n)\frac{dp}{\bar mg}
-				\end{equation}
-				これを積分して
-				\begin{equation}
-					\tau=(\kappa_vm_vp^*[T_\hmtp]+\kappa_nm+n(p_\hmtp-p^*[T_\hmtp]))
-					\frac{p}{p_\hmtp}\frac{1}{\bar mg}\label{tau}
-				\end{equation}
-				ただし、\(p*\) は飽和水蒸気圧で、添字 \(\hmtp\) は対流圏界面での値
-			\end{block}
-			\begin{block}{\eqref{rad} 式 \eqref{tau} 式 の対流圏界面での値}
-				\tiny
-				\begin{gather}
-					(1/2)F^\uparrow_\hmTOA((3/2)\tau_\hmtp+1)=\sigma T^4_\hmtp\label{radtp}\\
-					\tau_\hmtp=\kappa_vp^*[T_\hmtp]m_v/(\bar mg)\label{tautp}
-				\end{gather}
-				この 2 式が解をもつ \(F^\uparrow_\hmTOA\) の上限が Komabayashi--Ingersoll limit
-			\end{block}
+		\begin{column}{.2\textwidth}
+			\centering\tiny
+			\begin{tabular}{rl}
+				\hline
+				\(F^\uparrow\)&上向き放射フラックス\\
+				\(F^\downarrow\)&下向き放射フラックス\\
+				\(\tau\)&光学的厚さ\\
+				\(\tau_b\)&大気の全光学的厚さ\\
+				\(B\)&プランク関数\\
+				\(\kappa\)&吸収係数\\
+				\(x\)&分圧\\
+				\(m\)&分子量\\
+				添字\(n\)&乾燥空気の値\\
+				添字\(v\)&水蒸気の値\\
+				\(p\)&圧力\\
+				\(\bar m\)&平均分子量\\
+				\(g\)&重力加速度\\
+				\(p^*\)&飽和水蒸気圧\\
+				\(T\)&温度\\
+				\(R\)&気体定数\\
+				\(l\)&水の潜熱\\
+				\hline
+			\end{tabular}
 		\end{column}
 	\end{columns}
 \end{frame}
@@ -285,7 +307,8 @@
 			\begin{itemize}
 				\item \(F^\uparrow_\hmTOA\) がある値を超えると、\(\tau_\hmtp\) と
 					\(T_\hmtp\) の平衡解が存在しなくなる
-				\item 地球的パラメータのもとでは \(385\hmu{W/m^2}\) (Nakajima \etal*, 1992)
+				\item 地球的パラメータのもとでは Komabayashi--Ingersoll limit は
+					\(385\hmu{W/m^2}\) (Nakajima \etal*, 1992)
 			\end{itemize}
 		\end{column}
 		\begin{column}{.45\textwidth}
@@ -300,19 +323,22 @@
 \end{frame}
 
 \begin{frame}
-	\frametitle{対流圏モデル}
+	\frametitle{対流圏も考慮した複雑モデル}
 	\small
 	\begin{columns}[T,onlytextwidth]
 		\begin{column}{.7\textwidth}
 			\begin{itemize}
 				\item Kasting (1988), Abe and Matsui (1988)
+					\begin{itemize}
+						\item 地球型惑星の初期進化について考察した
+					\end{itemize}
 				\item より精密な過程を持ち、対流圏も考慮したモデルを用いた研究
 					\begin{table}
 						\tiny
 						\centering
 						\begin{tabular}{rll}
 							\hline
-							 &Kasting&Abe and Matusi\\
+							 &Kasting (1988)&Abe and Matusi (1988)\\
 							\hline
 							成層圏&等温&放射平衡\\
 							成層圏&一定のモル分率&一定のモル分率\\
@@ -342,12 +368,61 @@
 					が急激に上昇する
 				\item Abe and Matusi は \(F^\uparrow_\hmTOA\sim305\hmu{W/m^2}\) で
 					大気と海洋が平衡状態で共存できないと示した
+				\item このふたつが Komabayashi--Ingersoll limit と同じプロセスで
+					得られるものなのかは理解されてなかった
 			\end{itemize}
 	\end{itemize}
 \end{frame}
 
 \begin{frame}
 	\frametitle{Nakajima \etal (1992)}
+	\begin{itemize}
+		\item Nakajima \etal (1992)
+			\begin{itemize}
+				\item 暴走温室状態の概念の整理をおこなった
+			\end{itemize}
+		\item 一次元放射対流平衡モデルを用いた研究
+			\begin{columns}[c,onlytextwidth]
+				\begin{column}{.6\textwidth}
+					\begin{table}
+						\small\centering
+						\begin{tabular}{rl}
+							\hline
+							 &Nakajima \etal (1992)\\
+							\hline
+							成層圏&放射平衡\\
+							対流圏界面&飽和水蒸気\\
+							対流圏&飽和断熱減率\\
+							放射過程&散乱なし、灰色\\
+							成分&理想気体、2 成分（水蒸気・乾燥空気）\\
+							臨界点&なし\\
+							\hline
+						\end{tabular}
+					\end{table}
+				\end{column}
+				\begin{column}{.4\textwidth}
+					\tiny
+					\centering
+					\begin{tabular}{rl}
+						\hline
+						気体定数&\(R=8.314\hmu{J/mol\,K}\)\\
+						重力加速度&\(g=9.8\hmu{m/s^2}\)\\
+						ステファンボルツマン定数&\(\sigma=5.67\hme{-8}\hmu{W/m^2\,K^4}\)\\
+						\hline
+						非凝縮成分の分子量&\(m_n=18\hme{-3}\hmu{kg/mol}\)\\
+						凝縮成分の分子量&\(m_v=18\hme{-3}\hmu{kg/mol}\)\\
+						凝縮成分の定圧モル比熱&\(c_{pv}=4R\)\\
+						凝縮成分の潜熱&\(l=43655\hmu{J/mol}\)\\
+						飽和水蒸気曲線の定数&\(p^*_0=1.4\hme{11}\hmu{Pa}\)\\
+						% 非凝縮成分の定圧モル比熱&\(c_{pn}\)……複数ケース\\
+						% 大気の底での非凝縮成分の量&\(p_{n0}\)……複数ケース\\
+						% 凝縮成分の吸収係数&\(\kappa_{v}\)……複数ケース\\
+						% 非凝縮成分の吸収係数&\(\kappa_{n}\)……複数ケース\\
+						\hline
+					\end{tabular}
+				\end{column}
+			\end{columns}
+	\end{itemize}
 	\begin{itemize}
 		\item 表面温度 \(T_s\) と OLR の関係を調べ、考察したもの
 		\item OLR には上限が存在することがわかった
@@ -356,101 +431,61 @@
 					Komabayashi--Ingersoll limit は別の原因であるとわかった
 			\end{itemize}
 	\end{itemize}
-	\begin{columns}[onlytextwidth,T]
-		\begin{column}{.6\textwidth}
-			\begin{itemize}
-				\item 大気の水蒸気量（凝結成分量）に応じて、異なる上限が現れる
-					\begin{itemize}
-						\item 水蒸気量が極端に少ないときに現れる、Komabayashi--Ingersoll limit
-							(Komabayashi 1967, 1968, Ingersoll 1969)
-						\item ある程度水蒸気が存在するときに現れる上限
-					\end{itemize}
-			\end{itemize}
-		\end{column}
-		\begin{column}{.35\textwidth}
-			\centering\scriptsize
-			\includegraphics[width=\textwidth]{nakajima6.png}\\
-			大気下端の水蒸気量 \(p_0\) を変化させたときの \(F^\uparrow_\hmTOA\) と
-			\(T_s\) の関係 (Nakajima \etal Fig.~6)
-		\end{column}
-	\end{columns}
-\end{frame}
-
-\begin{frame}
-	\frametitle{Nakajima \etal のモデル設定}
-	\begin{itemize}
-		\item 一次元放射対流平衡モデル
-		\item 成層圏は放射平衡
-		\item 対流圏の放射過程・熱力学過程を考慮
-		\item 気体は凝結成分と非凝結成分の 2 成分
-	\end{itemize}
-	\begin{columns}[T]
-		\begin{column}{.35\textwidth}
-			\small
-				\centering
-				\begin{tabular}{rl}
-					\hline
-					成層圏&放射平衡\\
-					対流圏界面&飽和水蒸気\\
-					対流圏&飽和断熱減率\\
-					放射過程&散乱なし、灰色\\
-					成分&理想気体、2 成分\\
-					臨界点&なし\\
-					\hline
-				\end{tabular}
-		\end{column}
-		\begin{column}{.6\textwidth}
-			\tiny
-			\centering
-				\begin{tabular}{rl}
-					\hline
-					気体定数&\(R=8.314\hmu{J/mol\,K}\)\\
-					重力加速度&\(g=9.8\hmu{m/s^2}\)\\
-					ステファンボルツマン定数&\(\sigma=5.67\hme{-8}\hmu{W/m^2\,K^4}\)\\
-					\hline
-					非凝縮成分の分子量&\(m_n=18\hme{-3}\hmu{kg/mol}\)\\
-					凝縮成分の分子量&\(m_v=18\hme{-3}\hmu{kg/mol}\)\\
-					凝縮成分の定圧モル比熱&\(c_{pv}=4R\)\\
-					凝縮成分の潜熱&\(l=43655\hmu{J/mol}\)\\
-					飽和水蒸気曲線の定数&\(p^*_0=1.4\hme{11}\hmu{Pa}\)\\
-					非凝縮成分の定圧モル比熱&\(c_{pn}\)……複数ケース\\
-					大気の底での非凝縮成分の量&\(p_{n0}\)……複数ケース\\
-					凝縮成分の吸収係数&\(\kappa_{v}\)……複数ケース\\
-					非凝縮成分の吸収係数&\(\kappa_{n}\)……複数ケース\\
-					\hline
-				\end{tabular}
-		\end{column}
-	\end{columns}
 \end{frame}
 
 \begin{frame}
 	\frametitle{Nakajima \etal の結果}
 	\begin{columns}[c]
 		\begin{column}{.6\textwidth}
-			\centering
+			\centering\footnotesize
 			\includegraphics[width=\textwidth]{nakajima3-cpp-crop.pdf}\\
+			\(\kappa_v=0, p_{n0}=10^5\hmu{Pa}\) のときの \(T_s\) と OLR の関係\\
+			(Nakajima \etal Fig.~3 を改変)
 		\end{column}
 		\begin{column}{.4\textwidth}
 			\small
 			\begin{itemize}
-			\item \(\kappa_v=0, p_{n0}=10^5\hmu{Pa}\) のときの \(T_s\) と OLR の関係
-				(Nakajima \etal Fig.~3 を改変)
-			\item Komabayashi--Ingersoll limit より小さい値で射出限界になる
-			\item \(T_s>400\hmu{K}\) で \(F^\uparrow_\hmTOA\sim293\hmu{W/m^2}\) に漸近
-		\end{itemize}
-	\end{column}
-\end{columns}
+				\item Komabayashi--Ingersoll limit より小さい値で射出限界になる
+				\item \(T_s>400\hmu{K}\) で \(F^\uparrow_\hmTOA\sim293\hmu{W/m^2}\) に漸近
+					（Kasting (1988) や Abe and Matsui (1988)  が得たものに対応）
+			\end{itemize}
+		\end{column}
+	\end{columns}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Nakajima \etal の結果（水蒸気量を変化させた場合）}
+	\begin{columns}[c]
+		\begin{column}{.6\textwidth}
+			\centering\scriptsize
+			\includegraphics[width=\textwidth]{nakajima6.png}\\
+			大気下端の水蒸気量 \(p_0\) を変化させたときの \(F^\uparrow_\hmTOA\) と \(T_s\) の関係\\
+			(Nakajima \etal Fig.~6)
+		\end{column}
+		\begin{column}{.4\textwidth}
+			\begin{itemize}
+				\item 大気の水蒸気量（凝結成分量）に応じて、異なる上限が現れる
+					\begin{itemize}
+						\item 水蒸気量が極端に少ないときに Komabayashi--Ingersoll limit
+							が現れる
+						\item ある程度水蒸気が存在するときには、Komabayashi--Ingersoll limit
+							よりも小さい上限となる
+					\end{itemize}
+			\end{itemize}
+		\end{column}
+	\end{columns}
 \end{frame}
 
 \begin{frame}
 	\frametitle{Nakajima \etal (1992) 再現実験}
 	\begin{itemize}
-		\item 神戸大学の大西さんが 2012 年に作成したプログラムを用いて、
+		\item いろいろな大気について、射出限界を求めようと思っている
+		\item 手始めに、神戸大学の大西さんが 2012 年に作成したプログラムを用いて、
 			Nakajima \etal (1992) Fig.~3 を再現する実験を行っている
 		\item モデルの設定は Nakajima \etal (1992) と同様
 			\begin{itemize}
 				\item 対流圏も考慮した鉛直 1 次元モデル
-				\item モデル変数も Nakajima \etal (1992) と同様で、
+				\item モデル変数も Nakajima \etal (1992) Fig.~3 と同様で、
 					\(c_{pn}=3.5R, c_{pv}=4R, \kappa_v=0.01\hmu{m^2/kg}, \kappa_n=0, p_{n0}=1\hme{5}\hmu{Pa}\)
 			\end{itemize}
 	\end{itemize}
@@ -459,30 +494,27 @@
 \begin{frame}
 	\frametitle{大西プログラムの計算手順}
 	\begin{enu}[series=pros]
-		\item 初期値設定
-		\item 湿潤断熱減率に従って、上空まで温度、フラックスを計算
+		\item 湿潤擬断熱減率に従って、上空まで温度、フラックスを計算する
 			\begin{itemize}
-				\scriptsize
-				\item 湿潤偽断熱減率
+				\item 湿潤擬断熱減率
 					\begin{equation}
-						\qty(\pdv{T}{p})_\text{湿潤偽断熱}=
+						\qty(\pdv{T}{p})_\text{湿潤擬断熱}=
 						\left.\qty(\frac{RT}{pc_{pn}}+\frac{x_v}{x_n}\frac{l}{pc_{pn}})\middle/
 						\qty(x_n+x_v\frac{c_{pv}}{c_{pn}}+\frac{x_v}{x_n}\frac{l^2}{RT^2c_{pn}})\right.
 					\end{equation}
-%				\item 放射フラックスの計算式
-%					\begin{equation}
-%						F=\frac{3}{2}\pi B[\tau']\exp\qty[-\frac{3}{2}(\tau'-\tau)]
-%					\end{equation}
+				% \item 放射フラックスの計算式
+				% 	\begin{equation}
+				% 		F=\frac{3}{2}\pi B[\tau']\exp\qty[-\frac{3}{2}(\tau'-\tau)]
+				% 	\end{equation}
 			\end{itemize}
 		\item 対流圏界面の計算
 			\begin{itemize}
-				\item フラックスの発散 \(\hmfconv\) が \(0\) になる場所を決定
+				\item モデル格子間で、フラックスの発散 \(\hmfconv\) が \(0\) になる場所を
+					対流圏界面とする
+				\item 対流圏と成層圏で、温度の決め方が異なるので、対流圏界面を決定するのは重要
 			\end{itemize}
-		\item 対流圏界面を挿入
-		\item 圏界面水蒸気混合比で飽和
 		\item 光学的厚さの計算
 			\begin{equation}
-				\scriptsize
 				\dv{\tau}{p}=\frac{\kappa_vx_vm_v+\kappa_nx_nm_n}{\bar mg}
 			\end{equation}
 	\end{enu}
@@ -493,20 +525,19 @@
 	\begin{enu}[resume*=pros]
 		\item 放射平衡計算（これをループする）
 			\begin{enu}[series=rad]
-				\item 加熱
+				\item 温度構造を決定する
 					\begin{itemize}
-						\item \(\hmfconv\) と大気の熱容量から成層圏の温度を上昇させる
+						\item 成層圏は \(\hmfconv\) と大気の熱容量から温度を決定する
 							\begin{equation}
-								\scriptsize
 								\Delta T=\frac{mg}{c_p}\frac{\hmfconv[k]}{p[k+1]-p[k]}\delta t
 							\end{equation}
 						\item 対流圏は湿潤偽断熱減率に従う
 					\end{itemize}
-				\item 圏界面の計算
-				\item 圏界面移動
+				\item 光学的厚さとフラックスを再計算し、対流圏界面を再計算する
 				\item 収束判定
 					\begin{itemize}
-						\item \(\hmfconv\) の総和が十分小さくなれば計算終了
+						\item \(\hmfconv\) の総和が十分小さくなれば、
+							放射平衡に至ったと判断して、計算終了
 					\end{itemize}
 			\end{enu}
 	\end{enu}
@@ -537,19 +568,23 @@
 		\end{column}
 		\begin{column}{.5\textwidth}
 			\begin{itemize}
-				\item Nakajima \etal (1992) と同様の結果を得られた
+				\item 低温の領域では、Nakajima \etal (1992) と同様の結果を得られた
+					\begin{itemize}
+						\item \(345\hmu{K}\) は収束が遅かったので、
+							\(\hmfconv\) の和が \(10^{-1}\hmu{W/m^2}\) 未満で計算終了とした
+						\item \(T_s\leq340\hmu{K}\) での収束条件は、
+							\(\hmfconv\) の和が \(10^{-6}\hmu{W/m^2}\) 未満
+					\end{itemize}
 				\item \(T_s\geq350\hmu{K}\) では計算をすることに失敗している
 					\begin{itemize}
 						\item 収束条件に達しない
 							\begin{itemize}
 								\scriptsize
-								\item \(\hmfconv\) の和が \(10^{-6}\hmu{W/m^2}\) 未満にならない
-								\item \(345\hmu{K}\) は収束が遅かったので、
-									\(\hmfconv\) の和が \(10^{-1}\hmu{W/m^2}\) 未満で計算終了とした
-							\end{itemize}
-						\item プログラムが実行中に落ちる
-					\end{itemize}
-			\end{itemize}
+							\item \(\hmfconv\) の和が小さくならない
+						\end{itemize}
+					\item プログラムが実行中に落ちる
+				\end{itemize}
+		\end{itemize}
 		\end{column}
 	\end{columns}
 \end{frame}
@@ -570,9 +605,9 @@
 		\item 今後の展望
 			\begin{itemize}
 				\item 大西プログラムが実行中に落ちる原因を究明する必要
-				\item 地球放射での射出限界について詳しく検討したい
+				\item 灰色大気での射出限界について詳しく検討したい
 					\begin{itemize}
-						\item さらに、系外惑星に関しても検討したい
+						\item さらに、地球大気や、系外惑星の大気に関しても検討したい
 						\item 系外惑星の放射計算ためには、研究室で用いられる
 							GCM の改良が必要になるだろう
 					\end{itemize}
